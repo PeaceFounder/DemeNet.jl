@@ -21,7 +21,7 @@ datadir(uuid::UUID) = CONFIG_DIR * "/data/$uuid/"
 
 abstract type AbstractID end
 
-struct ID
+struct ID <: AbstractID
     id::Union{BigInt,Nothing}
 end
 
@@ -39,6 +39,13 @@ end
 
 ID(str::AbstractString; kwargs...) = ID(parse(BigInt,str; kwargs...))
 
+import Base.Dict
+
+Dict(id::ID) = Dict("id"=>string(id,base=16))
+
+ID(dict::Dict) = ID(dict["id"],base=16)
+
+
 import Base.Vector
 
 Vector{UInt8}(id::ID; kwargs...) = Vector{UInt8}(string(id; kwargs...))
@@ -48,7 +55,7 @@ Base.:(==)(a::ID,b::ID) = a.id==b.id
 Base.hash(a::ID,h::UInt) = hash(a.id,hash(:ID,h))
 Base.in(a::ID,b::ID) = a==b
 
-struct DemeID 
+struct DemeID <: AbstractID 
     uuid::UUID
     id::ID
 end

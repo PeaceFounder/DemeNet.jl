@@ -61,6 +61,19 @@ end
 
 Certificate(x,signer::Signer) = Certificate(x,Dict(signer.sign("$x")))
 
+function Dict(config::Certificate{T}) where T
+    sdict = Dict(config.signature)
+    dict = Dict(config.document)
+    return Dict(dict...,"signature"=>sdict)
+end
+
+function Certificate{T}(dict::Dict) where T
+    document = T(dict)
+    signature = dict["signature"]
+    return Certificate(document,signature)
+end
+
+
 ### This is the type which requires a dynamic dyspatch
 struct Envelope{T}
     uuid::UUID
@@ -104,6 +117,27 @@ struct Contract{T}
     document::T
     signatures::Vector{Dict{String,Any}}
 end
+
+
+function Dict(contract::Contract)
+    dict = Dict(contract.document)
+
+    signatures = Dict[]
+    for s in contract.signatures
+        push!(signatures,Dict(s))
+    end
+    dict["signatures"] = signatures
+    
+    return dict
+end
+
+function Contract{T}(dict::Dict) where T
+    braid = T(dict)
+    signatures = dict["signatures"]
+    
+    return Contract(braid,signatures)
+end
+
 
 ### This one is associated to the contract
 # Gives permission to do something, like add a new key to the braidchain synchronically. 
