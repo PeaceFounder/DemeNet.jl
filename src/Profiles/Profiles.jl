@@ -1,10 +1,17 @@
 module Profiles
 
+
+using ..Types: CONFIG_DIR
+using Base: UUID
+
 using Pkg.TOML
 import Base.Dict
 
+
+
 struct Profile
-    name::AbstractString
+    uuid::UUID
+    name::Union{AbstractString,Nothing}
     date::Union{AbstractString,Nothing}
     about::Union{AbstractString,Nothing}
     homepage::Union{AbstractString,Nothing}
@@ -17,6 +24,7 @@ end
 function Dict(profile::Profile)
     dict = Dict()
 
+    dict["uuid"] = string(profile.uuid)
     isnothing(profile.name) || (dict["name"] = profile.name)
     isnothing(profile.date) || (dict["date"] = profile.date)
     isnothing(profile.about) || (dict["about"] = profile.about)
@@ -31,7 +39,7 @@ end
 
 ### I could use this for the tests with something like Profile(Dict("name"=>"account1"))
 function Profile(dict::Dict)
-    
+    uuid = UUID(dict["uuid"])
     haskey(dict,"name") ? (name=dict["name"]) : (name=nothing)
     haskey(dict,"date") ? (date=dict["date"]) : (date=nothing)
     haskey(dict,"about") ? (about=dict["about"]) : (about=nothing)
@@ -43,7 +51,7 @@ function Profile(dict::Dict)
 
     # One may also add membership of each deme as part of the profile additionally with signatures in a envelope form.
     
-    return Profile(name,date,about,homepage,email,facebook,twitter,github)
+    return Profile(uuid,name,date,about,homepage,email,facebook,twitter,github)
 end
 
 function save(fname::AbstractString,profile::Profile)
