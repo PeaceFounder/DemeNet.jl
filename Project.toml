@@ -5,14 +5,15 @@ version = "0.1.2"
 
 [deps]
 DiffieHellman = "0e61fee8-20a4-4374-8233-5198f28d9d66"
+PeaceCypher = "7743456c-e0c5-4477-a2b6-196c240b0368"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [compat]
 DiffieHellman = "0.4"
 julia = "1"
 
-[extras]
-PeaceCypher = "7743456c-e0c5-4477-a2b6-196c240b0368"
+# [extras]
+# PeaceCypher = "7743456c-e0c5-4477-a2b6-196c240b0368"
 
-[targets]
-test = ["PeaceCypher"]
+# [targets]
+# test = ["PeaceCypher"]
