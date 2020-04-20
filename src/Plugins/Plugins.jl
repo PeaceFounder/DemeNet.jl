@@ -4,6 +4,20 @@ using ..Types: uuid
 
 abstract type AbstractPlugin end
 
+abstract type AbstractInitializer <: AbstractPlugin end
+
+function init end
+#init(::AbstractInitializer,deme::Deme,config::Dict) = error("Impl. error")
+
+# Loads a configuration file for the particular peacefounder
+#config(::AbstractInitializer,deme::Deme) = error("Impl. error")
+function config end
+
+# updates the PeaceFounder.toml file using information in existing one
+#update(::AbstractInitializer,deme::Deme) = error("Impl. error")
+function updateconfig end
+
+
 using Base: UUID
 
 struct Notary
