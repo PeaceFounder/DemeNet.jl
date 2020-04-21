@@ -3,7 +3,10 @@ module Types
 using Base: UUID
 
 using Pkg.Types: Context
-uuid(ctx::Context,name::AbstractString) = ctx.env.project.deps[name]
+function uuid(ctx::Context,name::AbstractString) 
+    @show ctx.env.project.deps
+    ctx.env.project.deps[name]
+end
 uuid(ctx::Context,name::Symbol) = uuid(ctx,String(name))
 uuid(ctx::Context,name::Module) = uuid(ctx,nameof(name))
 uuid(name::Union{Module,Symbol,AbstractString}) = uuid(Context(),name)

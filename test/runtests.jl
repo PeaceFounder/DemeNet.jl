@@ -1,10 +1,12 @@
 using DemeNet: DemeSpec, Deme, Signer, Certificate, Intent, save
 
+import DemeNet
+
 # Need to think what this error means
 # LoadError: KeyError: key "PeaceCypher" not found
 using PeaceCypher
 
-demespec = DemeSpec("PeaceDeme",:default,:PeaceCypher,:default,:PeaceCypher,:DemeNet)
+demespec = DemeSpec("PeaceDeme",:default,:PeaceCypher,:default,:PeaceCypher,:PeaceCypher)
 save(demespec)
 DemeSpec(demespec.uuid)==demespec # All fields are equal. Need to implement equality for this test
 
