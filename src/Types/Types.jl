@@ -2,14 +2,25 @@ module Types
 
 using Base: UUID
 
-using Pkg.Types: Context
-function uuid(ctx::Context,name::AbstractString) 
-    @show ctx.env.project.deps
-    ctx.env.project.deps[name]
+#using Pkg.Types: Context
+#uuid(ctx::Context,name::AbstractString) = ctx.env.project.deps[name]
+
+function uuid(name::String)
+    for key in keys(Base.loaded_modules)
+        if key.name==name
+            return key.uuid
+        end
+    end
 end
-uuid(ctx::Context,name::Symbol) = uuid(ctx,String(name))
-uuid(ctx::Context,name::Module) = uuid(ctx,nameof(name))
-uuid(name::Union{Module,Symbol,AbstractString}) = uuid(Context(),name)
+
+uuid(name::Symbol) = uuid(String(name))
+uuid(name::Module) = uuid(nameof(name))
+#uuid(name::Union{Module,Symbol,AbstractString}) = uuid(Context(),name)
+
+# uuid(ctx::Context,name::Symbol) = uuid(ctx,String(name))
+# uuid(ctx::Context,name::Module) = uuid(ctx,nameof(name))
+# uuid(name::Union{Module,Symbol,AbstractString}) = uuid(Context(),name)
+
 
 const CONFIG_DIR = homedir() * "/.demenet/"
 

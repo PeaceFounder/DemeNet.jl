@@ -20,4 +20,16 @@ import .Profiles: Profile
 import .TOMLIO: serialize, deserialize
 import .Crypto: DHsym, DHasym
 
+
+Plugin(::Type{T},deme::Deme) where T <: AbstractPlugin = Plugin[deme.spec.peacefounder](T,deme)
+Plugin(::Type{T},deme::Deme,config) where T <: AbstractPlugin = Plugin[deme.spec.peacefounder](T,deme,config)
+
+abstract type AbstractInitializer <: AbstractPlugin end
+AbstractInitializer(deme) = Plugin(AbstractInitializer,deme)
+
+### THE API of AbstractInitializer. Perhaps some kind of trait abstraction is needed ###
+init(::AbstractInitializer,port::Dict) = error("Contract not satisfied") 
+config(::AbstractInitializer) = error("Contract not satisfied") 
+updateconfig(::AbstractInitializer) = error("Contract not satisfied") 
+
 end

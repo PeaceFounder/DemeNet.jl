@@ -3,7 +3,6 @@ module Demes
 import Base.Dict
 using Base: UUID
 using Pkg.TOML
-using Pkg.Types: Context
 using ..Types: ID, uuid, demefile
 import ..Keys: Signer
 import ..Plugins: Notary, Cypher
@@ -86,18 +85,24 @@ function DemeSpec(uuid::UUID)
     DemeSpec(dict)
 end
 
-function DemeSpec(name::AbstractString,crypto::Symbol,cryptodep::Symbol,cypherconfig::Symbol,cypherdep::Symbol,peacefounder::Symbol)#,notary::Notary)
-    ctx = Context()
-    #deps_uuid = UUID[uuid(ctx,dep) for dep in deps]
-    cryptodep_uuid = uuid(ctx,cryptodep)
-    cypherdep_uuid = uuid(ctx,cypherdep) 
-    peacefounder_uuid = uuid(ctx,peacefounder)
+function DemeSpec(name::AbstractString,crypto::Symbol,cryptodep::UUID,cypherconfig::Symbol,cypherdep::UUID,peacefounder::UUID)#,notary::Notary)
     demeuuid = _uuid(name)
-
-    notary = Notary(cryptodep_uuid,crypto)
+    notary = Notary(cryptodep,crypto)
     maintainer = Signer(demeuuid,notary,"maintainer")
-    DemeSpec(demeuuid,name,maintainer.id,crypto,cryptodep_uuid,cypherconfig,cypherdep_uuid,peacefounder_uuid)
+    DemeSpec(demeuuid,name,maintainer.id,crypto,cryptodep,cypherconfig,cypherdep,peacefounder)
 end
+
+
+function DemeSpec(name::AbstractString,crypto::Symbol,cryptodep::Symbol,cypherconfig::Symbol,cypherdep::Symbol,peacefounder::Symbol)
+    cryptodep_uuid = uuid(cryptodep)
+    cypherdep_uuid = uuid(cypherdep) 
+    peacefounder_uuid = uuid(peacefounder)
+    DemeSpec(name,crypto,cryptodep_uuid,cypherconfig,cypherdep_uuid,peacefounder_uuid)
+end
+
+
+
+
 
 Notary(metadata::DemeSpec) = Notary(metadata.cryptodep,metadata.crypto)
 Cypher(metadata::DemeSpec) = Cypher(metadata.cypherdep,metadata.cypherconfig)
